@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const userRoutes = require("./routes/userRoutes");
 const projectRoutes = require("./routes/projectRoutes");
+const taskRoutes = require("./routes/taskRoutes");
 
 // Middleware
 app.use(express.json());
@@ -11,6 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use(userRoutes);
 app.use(projectRoutes);
+app.use(taskRoutes);
 
 // Start server
 const PORT = 7000;
