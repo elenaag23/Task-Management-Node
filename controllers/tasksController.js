@@ -108,10 +108,13 @@ exports.deleteTask = async (req, res) => {
       return res.status(404).json({ error: "Task not found" });
     }
 
-    if (task.createdBy !== userId) {
-      return res
-        .status(404)
-        .json({ error: "You don't have the rights to delete this project!" });
+    console.log("assignee: ", task.assignee);
+    console.log("user id : ", userId);
+
+    if (task.assignee !== userId) {
+      return res.status(404).json({
+        error: "You don't have the rights to delete this task!",
+      });
     }
 
     await Task.destroy({ where: { id: taskId } });

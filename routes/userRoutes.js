@@ -5,7 +5,7 @@ const usersController = require("../controllers/usersController");
 
 // Define routes for CRUD operations
 router.post("/users/register", usersController.register);
-// router.post("/users/login", usersController.login);
+router.post("/login", usersController.login);
 router.get("/users/get", usersController.getUsers);
 router.get("/users/getUser/:id", usersController.getUser);
 router.put("/users/edit/:id", usersController.editUser);
