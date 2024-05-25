@@ -44,6 +44,18 @@ exports.getTasks = async (req, res) => {
   }
 };
 
+exports.getPriority = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const tasks = await Task.findAll({
+      where: { assignee: userId, taskPriority: "high" },
+    });
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 exports.getTask = async (req, res) => {
   try {
     const taskId = parseInt(req.params.id, 10);

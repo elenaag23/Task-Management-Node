@@ -16,6 +16,11 @@ router.post(
 );
 router.get("/tasks/get", tasksController.getTasks);
 router.get("/tasks/getTasks/:id", tasksController.getTask);
+router.get(
+  "/tasks/getPriority",
+  authenticateToken,
+  tasksController.getPriority
+);
 router.put(
   "/tasks/edit/:id",
   authenticateToken,
