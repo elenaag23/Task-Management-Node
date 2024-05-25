@@ -8,12 +8,13 @@ exports.create = async (req, res) => {
     const now = new Date();
 
     console.log("useriddd: ", userId);
-    const { projectName, startDate, projectDescription } = req.body;
+    const { projectName, startDate, projectDescription, endDate } = req.body;
     const project = await Project.create({
       projectName: projectName,
       startDate: startDate,
       projectDescription: projectDescription,
       createdBy: userId,
+      endDate: endDate,
     });
 
     console.log("returned project: ", project);
@@ -32,7 +33,9 @@ exports.create = async (req, res) => {
 
 exports.getProjects = async (req, res) => {
   try {
-    const projects = await Project.findAll();
+    const projects = await Project.findAll({
+      order: [["endDate", "ASC"]],
+    });
     res.json(projects);
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
