@@ -1,4 +1,5 @@
 const ProjectMembers = require("../models/projectMember");
+const User = require("../models/user");
 
 exports.add = async (req, res) => {
   try {
@@ -20,18 +21,25 @@ exports.add = async (req, res) => {
 exports.getMembers = async (req, res) => {
   try {
     const projectId = parseInt(req.params.id, 10);
-    const projectMembers = await projectMembers.findAll(projectId);
+    const projectMembers = await ProjectMembers.findAll({
+      where: { projectid: projectId },
+    });
 
+    console.log("project members: ", projectMembers);
     const membersArray = [];
 
     for (var member of projectMembers) {
-      const user = User.findByPk(member.memberId);
+      console.log("member: ", member);
+      const user = await User.findByPk(member.dataValues.userid);
+      user["dataValues"]["projectid"] = projectId;
+      user["dataValues"]["role"] = member.dataValues.role;
+      console.log("user: ", user);
       membersArray.push(user);
     }
 
     res.status(200).json(membersArray);
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Error: " + error });
   }
 };
 
@@ -44,23 +52,23 @@ exports.edit = async (req, res) => {
     {
       role: role,
     },
-    { where: { projectId: projectId, memberId: memberId } }
+    { where: { projectid: projectId, userid: memberId } }
   );
 
   res
     .status(200)
-    .json({ message: "Project member updated successfully", project });
+    .json({ message: "Project member updated successfully", updated });
 };
 
 exports.deleteMember = async (req, res) => {
   const projectId = req.params.id;
-  const memberId = req.params.memberId;
+  const memberId = req.params.idMember;
 
   try {
     const member = await ProjectMembers.findOne({
       where: {
-        projectId: projectId,
-        memberId: userId,
+        projectid: projectId,
+        userid: memberId,
       },
     });
     if (!member) {
@@ -68,7 +76,7 @@ exports.deleteMember = async (req, res) => {
     }
 
     await ProjectMembers.destroy({
-      where: { id: projectId, memberId: memberId },
+      where: { projectid: projectId, userid: memberId },
     });
 
     res.status(200).json({ message: "Project member deleted successfully" });
