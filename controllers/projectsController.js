@@ -1,5 +1,6 @@
 // controllers/userController.js
 const Project = require("../models/project");
+const ProjectMembers = require("../models/projectMember");
 
 exports.create = async (req, res) => {
   try {
@@ -15,11 +16,13 @@ exports.create = async (req, res) => {
       createdBy: userId,
     });
 
-    // const projectAdmin = await ProjectMembers.create({
-    //   projectId: project.id,
-    //   userId: userId,
-    //   role: "Admin",
-    // });
+    console.log("returned project: ", project);
+
+    const projectAdmin = await ProjectMembers.create({
+      projectid: project.id,
+      userid: userId,
+      role: "admin",
+    });
 
     res.status(201).json(project);
   } catch (error) {

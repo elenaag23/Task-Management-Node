@@ -17,6 +17,8 @@ exports.create = async (req, res) => {
       assignee,
     } = req.body;
 
+    console.log("req body: ", req.body);
+
     const task = await Task.create({
       taskTitle,
       taskDescription,
